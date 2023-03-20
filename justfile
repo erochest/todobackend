@@ -9,7 +9,13 @@ destroy:
   dropuser todobackend
 
 build:
-  ./gradlew -x test build    
+  ./gradlew -x test build
+
+run:
+  ./gradlew bootRun
+
+test:
+  ./gradlew test
 
 dependencies:
   ./gradlew -q dependencies --configuration compileClasspath > ./dependencies.txt
