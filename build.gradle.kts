@@ -35,6 +35,7 @@ dependencies {
 //	implementation("org.springframework.session:spring-session-core")
 //	developmentOnly("org.springframework.boot:spring-boot-devtools")
 //	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("com.h2database:h2")
 	testImplementation("org.assertj:assertj-core:3.24.2")
 	testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
