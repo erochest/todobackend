@@ -1,4 +1,6 @@
 
+## Session 1
+
 So one of the things that I'm curious about as we pick up on ChatGPT so how this will influence TDD.
 Much/all of the discussion I've seen on it assumes that you're doing testing for quality
 assurance. But I practice TDD as much as a design practice as a testing practice.
