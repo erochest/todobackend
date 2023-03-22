@@ -18,8 +18,5 @@ class CorsConfiguration : WebMvcConfigurer {
         logger.info("Configuring CORS headers")
         registry.addMapping("/**")
             .allowedOrigins("*")
-//            .allowedMethods("*")
-//            .allowedHeaders("*")
-//            .allowCredentials(false)
     }
 }
