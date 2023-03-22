@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest
+@WebMvcTest(controllers = arrayOf(TodobackendController::class))
 class TodobackendControllerTests {
 
     @Autowired
@@ -17,7 +17,6 @@ class TodobackendControllerTests {
 
     @Test
     fun whenRootGet_thenReturn200() {
-        val size = hasSize<Any>(0)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api")
                 .contentType(MediaType.APPLICATION_JSON)
