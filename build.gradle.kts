@@ -33,10 +33,10 @@ dependencies {
 //	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 //	implementation("org.springframework.session:spring-session-core")
-//	compileOnly("org.projectlombok:lombok")
 //	developmentOnly("org.springframework.boot:spring-boot-devtools")
 //	runtimeOnly("org.postgresql:postgresql")
-//	annotationProcessor("org.projectlombok:lombok")
+	testImplementation("org.assertj:assertj-core:3.24.2")
+	testImplementation("org.mockito:mockito-junit-jupiter:5.2.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 //	testImplementation("org.springframework.security:spring-security-test")
 }
