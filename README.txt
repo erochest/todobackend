@@ -14,3 +14,6 @@ I'm going to use the To-do-Backend project for this. I have a shell application 
 Spring Boot stubbed out.
 
 We'll see what happens!
+
+I like to stop sessions with broken tests to remind me where to pick up, and I think this is long
+enough for one video!
