@@ -16,12 +16,12 @@ class TodobackendControllerTests {
     lateinit var mockMvc: MockMvc
 
     @Test
-    fun testRootReturns200() {
+    fun whenRootGet_thenReturn200() {
         val size = hasSize<Any>(0)
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api")
                 .contentType(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().is2xxSuccessful())
+            .andExpect(status().is2xxSuccessful)
     }
 }
