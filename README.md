@@ -19,3 +19,28 @@ We'll see what happens!
 
 I like to stop sessions with broken tests to remind me where to pick up, and I think this is long
 enough for one video!
+
+## Session 2
+
+In case it's not clear, I've never really used Kotlin, and it's been a day or two since I've used
+Spring Boot for more than 3 seconds.
+
+So I've cleaned some things up and renamed them and set up the JPA dependencies and gotten ready
+to test all that stuff.
+
+Back to it.
+
+First, I'll probably need to remind ChatGPT where we were.
+
+### whenRootDelete_thenReturnsOk
+
+Technically, the implementation does more than necessary to make the test pass: it doesn't
+need to clear the items right now. But I'm also following the tests in the TodoBackend
+project pretty closely, and I'd probably do them differently. Maybe in the next session
+I'll do more driving and less cookbooking it. To mix metaphors.
+
+### data objects
+
+This is going to be slightly icky. I'll fix it later.
+
+Cool. Gotta run, but solid progress.
