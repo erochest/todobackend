@@ -44,3 +44,42 @@ I'll do more driving and less cookbooking it. To mix metaphors.
 This is going to be slightly icky. I'll fix it later.
 
 Cool. Gotta run, but solid progress.
+
+## Session 3
+
+I lied. I'm going to keep working through the tests given for the TodoBackend project.
+I have gone ahead and implemented the next section of work, though, so you won't need
+to watch me type as much as you have been. :)
+
+My plan at this point is to continue with the next section of tests and features.
+
+After that, I'll turn my attention to refactoring what we have to create some use-case
+classes and a repository and database. That'll require me to write some tests.
+
+When I come back from that, for the next section of TodoBackend tests, I'll quit coding
+anything (insert ED joke here) and just have ChatGPT do everything.
+
+K. Now back to coding.
+
+Hmm. Why did I disable `whenPostThenGet_thenReturnsNewItem'? It looks like
+it may have been working at some point.
+Also, notice that I renamed the test methods and I refactored the tests.
+Oh, so maybe this is the test I left hanging last time.
+And the second failure is because the tests aren't properly isolated.
+
+Let's fix that.
+
+That mean's we're going to do the refactoring now.
+
+The way I'd typically do that would be to
+- introduce an interface in my tests,
+- use the compiler warnings to push that change into the controller, and
+- then mock out the repository.
+- Then I'd have a separate set of tests to drive that implementation out.
+
+But with my robot helper ...
+I may actually do the same thing. We'll see.
+
+Well, I said you wouldn't have to watch me, but I lied again. I'll be back
+when there's more crunchy ChatGPT goodness. :)
+
