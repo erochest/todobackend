@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 // No Flyway migrations! Tests driving out implementation. :D
 
 interface TodoRepository : JpaRepository<TodoItem, Long> {
+    abstract fun findAllByTitle(title: String): List<TodoItem>
 }
 
 @Entity
