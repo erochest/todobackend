@@ -15,7 +15,8 @@ interface TodoRepository : JpaRepository<TodoItem, Long> {
 @Entity
 data class TodoItem(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = 0,
-    val title: String = ""
+    val title: String = "",
+    val completed: Boolean = false
 ) {
-    constructor() : this(0, "") // required by JPA
+    constructor() : this(0, "", false) // required by JPA
 }

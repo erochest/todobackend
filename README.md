@@ -107,3 +107,6 @@ MOAR NEW THINGS!
 
 And instead of me sweating it, I'm going to get the robot to write the migrations.
 It is implementation, after all.
+
+Nice! Let's call it a day. The next task will add a URL to the response, so I'll probably
+also include the database ID and implement something to build the response from the DAO.

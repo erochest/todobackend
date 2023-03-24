@@ -79,20 +79,17 @@ class TodobackendControllerTests {
             .andExpect(jsonPath("$[0].title", equalTo("this is a title")))
     }
 
-    // So these tests are failing because the controller is wired up with the repository,
-    // but it's not actually using it. Let's get the robot to fix that.
-
     // All right. Now we're back where we were.
-    @Disabled
     @Test
     fun whenPostThenGet_thenNewItemsIsNotComplete() {
         every { todoRepository.save(TodoItem(title="placeholder")) }
             .returns(TodoItem(1, "placeholder"))
-        every { todoRepository.findAll() } returns listOf(TodoItem(0, "placeholder"))
         postTodo("placeholder")
-        getTodoList()
-            .andExpect(jsonPath("$", hasSize<Any>(1)))
-            .andExpect(jsonPath("$[0].completed", `is`(false)))
+            .andDo { result ->
+                println(result.response.contentAsString)
+            }
+            .andExpect(jsonPath("$", hasKey("completed")))
+            .andExpect(jsonPath("$.completed", `is`(false)))
     }
 
     // Everything from here on are tests for the next section. I'll go through them

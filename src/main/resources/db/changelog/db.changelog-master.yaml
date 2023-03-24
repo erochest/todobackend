@@ -15,3 +15,14 @@ databaseChangeLog:
               - column:
                   name: title
                   type: VARCHAR(255)
+  - changeSet:
+      id: add_completed_column_to_todoitem
+      author: your_name
+      changes:
+        - addColumn:
+            tableName: todo_item
+            columns:
+              - column:
+                  name: completed
+                  type: BOOLEAN
+                  defaultValueBoolean: false
