@@ -110,3 +110,11 @@ It is implementation, after all.
 
 Nice! Let's call it a day. The next task will add a URL to the response, so I'll probably
 also include the database ID and implement something to build the response from the DAO.
+
+# Session 6
+
+Back. And back to where we were several sessions ago, I think.
+
+I've already written the tests for the rest of this session, so I'll give us a moment
+to look over each, and then feed it to ChatGPT.
+

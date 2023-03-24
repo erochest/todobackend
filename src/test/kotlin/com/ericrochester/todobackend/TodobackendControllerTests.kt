@@ -79,7 +79,6 @@ class TodobackendControllerTests {
             .andExpect(jsonPath("$[0].title", equalTo("this is a title")))
     }
 
-    // All right. Now we're back where we were.
     @Test
     fun whenPostThenGet_thenNewItemsIsNotComplete() {
         every { todoRepository.save(TodoItem(title="placeholder")) }
@@ -92,17 +91,19 @@ class TodobackendControllerTests {
             .andExpect(jsonPath("$.completed", `is`(false)))
     }
 
-    // Everything from here on are tests for the next section. I'll go through them
-    // one-by-one when we're ready to work with them.
-
-    @Disabled
     @Test
     fun whenPostThenGet_thenNewItemsHaveUrlString() {
+        every { todoRepository.save(TodoItem(title = "has link")) }
+            .returns(TodoItem(1, "has link"))
+        every { todoRepository.findAll() }
+            .returns(listOf(TodoItem(1, "has link")))
         postTodo("has link")
         getTodoList()
             .andExpect(jsonPath("$", hasSize<Any>(1)))
             .andExpect(jsonPath("$[0].url", isA<Any>(String::class.java)))
     }
+
+    // Once again, it's done too much. But whatev.
 
     @Disabled
     @Test
