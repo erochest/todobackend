@@ -3,6 +3,7 @@ package com.ericrochester.todobackend
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.justRun
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -24,21 +25,35 @@ class TodobackendControllerTests {
     @Autowired
     val objectMapper = ObjectMapper()
 
+    // So I created this interface. I changed all of the tests below to use this
+    // to set up the data that the controller will return.
+    @MockkBean
+    private lateinit var todoRepository: TodoRepository
+
     @Test
     fun whenRootGet_thenReturn200() {
+        // For example
+        every { todoRepository.findAll() } returns emptyList()
         getTodoList()
             .andExpect(status().is2xxSuccessful)
     }
 
     @Test
     fun whenRootPost_thenReturnTitle() {
+        every { todoRepository.save(TodoItem(title="something")) }
+            .returns(TodoItem(1, "something"))
+
         postTodo("something")
             .andExpect(status().isCreated)
             .andExpect(jsonPath("$.title", equalTo("something")))
     }
 
+    // I'd wondered if Mockk would just default to returning `void`.
     @Test
     fun whenRootDelete_thenReturnsOk() {
+        // The spec seems underspecified here. Imma going to just blow everything away.
+        justRun { todoRepository.deleteAll() }
+        every { todoRepository.findAll() } returns emptyList()
         mockMvc.perform(
             MockMvcRequestBuilders.delete("/api")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -47,23 +62,41 @@ class TodobackendControllerTests {
             .andExpect(status().isOk)
     }
 
-    @Disabled
     @Test
     fun whenPostThenGet_thenReturnsNewItems() {
+        // And this came up. Basically, this should be tested in the repository, not
+        // here. Maybe I'll replace this with a test that makes sure GET `/api` returns
+        // whatever is in the repository.
+        //
+        // I'm going to keep this test here for the time being, but really it is testing
+        // the repository, not the controller. So I'll eventually take this away.
+        every { todoRepository.save(TodoItem(title="this is a title")) }
+            .returns(TodoItem(1, "this is a title"))
+        every { todoRepository.findAll() } returns listOf(TodoItem(1, "this is a title"))
         postTodo("this is a title")
         getTodoList()
             .andExpect(jsonPath("$", hasSize<Any>(1)))
             .andExpect(jsonPath("$[0].title", equalTo("this is a title")))
     }
 
+    // So these tests are failing because the controller is wired up with the repository,
+    // but it's not actually using it. Let's get the robot to fix that.
+
+    // All right. Now we're back where we were.
     @Disabled
     @Test
     fun whenPostThenGet_thenNewItemsIsNotComplete() {
+        every { todoRepository.save(TodoItem(title="placeholder")) }
+            .returns(TodoItem(1, "placeholder"))
+        every { todoRepository.findAll() } returns listOf(TodoItem(0, "placeholder"))
         postTodo("placeholder")
         getTodoList()
             .andExpect(jsonPath("$", hasSize<Any>(1)))
             .andExpect(jsonPath("$[0].completed", `is`(false)))
     }
+
+    // Everything from here on are tests for the next section. I'll go through them
+    // one-by-one when we're ready to work with them.
 
     @Disabled
     @Test
