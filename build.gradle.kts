@@ -31,7 +31,7 @@ dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.flywaydb:flyway-core")
+	implementation("org.liquibase:liquibase-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 //	implementation("org.springframework.session:spring-session-core")
 //	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -43,6 +43,8 @@ dependencies {
 		exclude(module = "mockito-core")
 	}
 	testImplementation("com.ninja-squad:springmockk:4.0.2")
+	testImplementation("org.amshove.kluent:kluent:1.72")
+
 //	testImplementation("org.springframework.security:spring-security-test")
 }
 

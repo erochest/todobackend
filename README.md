@@ -83,3 +83,27 @@ I may actually do the same thing. We'll see.
 Well, I said you wouldn't have to watch me, but I lied again. I'll be back
 when there's more crunchy ChatGPT goodness. :)
 
+# Session 4
+
+Now I think I have the bean wiring issues worked out with the mocking. Basically,
+instead of using Mockito, I need to use a mocking library that plays nicely with
+Kotlin, Mockk.
+
+And now I'm ready to get our robot overlords to start extracting out a repository
+class. Let me walk you through the changes I made to the current set of tests.
+
+# Between sessions
+
+LOL. I didn't mean to rage quit. I realized that I needed to make sure that the
+SQL I was getting ready to write would work with both H2 and PostgreSQL, and we'd
+been at it a while, and it seemed like a good time to take a break.
+
+And most importantly, I needed coffee.
+
+# Session 5
+
+So to handle both databases, I'm going to move away from using Flyway to Liquid.
+MOAR NEW THINGS!
+
+And instead of me sweating it, I'm going to get the robot to write the migrations.
+It is implementation, after all.

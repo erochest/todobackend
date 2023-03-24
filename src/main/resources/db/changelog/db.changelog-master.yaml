@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_todoitem_table
+      author: Eric Rochester
+      changes:
+        - createTable:
+            tableName: todo_item
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(255)
