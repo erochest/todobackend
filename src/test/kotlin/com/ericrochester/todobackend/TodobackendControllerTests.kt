@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.util.*
 
 @WebMvcTest(controllers = arrayOf(TodobackendController::class))
 class TodobackendControllerTests {
@@ -97,29 +98,67 @@ class TodobackendControllerTests {
             .returns(TodoItem(1, "has link"))
         every { todoRepository.findAll() }
             .returns(listOf(TodoItem(1, "has link")))
+
         postTodo("has link")
+
         getTodoList()
             .andExpect(jsonPath("$", hasSize<Any>(1)))
             .andExpect(jsonPath("$[0].url", isA<Any>(String::class.java)))
     }
 
-    // Once again, it's done too much. But whatev.
-
-    @Disabled
+    // I think this is good. Let's see.
     @Test
     fun whenPostThenGet_thenNewItemLinkReturnsTodo() {
-        postTodo("has link resource")
-        val result = getTodoList().andReturn().response.contentAsString
+        every { todoRepository.save(TodoItem(title = "has link resource")) }
+            .returns(TodoItem(1, "has link resource"))
+        every { todoRepository.findById(1) }
+            .returns(Optional.of(TodoItem(1, "has link resource")))
+
+        val result = postTodo("has link resource").andReturn().response.contentAsString
         val todo: TodobackendController.ItemResponse = objectMapper.readValue(
             result,
             TodobackendController.ItemResponse::class.java
             )
+
         mockMvc.perform(
-            MockMvcRequestBuilders.get(todo.title) // url)
+            MockMvcRequestBuilders.get(todo.url)
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.title", equalTo("has link resource")))
+    }
+
+    @Test
+    fun whatPatchWithoutTitle_thenUpdatesNothing() {
+        justRun { todoRepository.updateTitle(1, "new title") }
+        every { todoRepository.findById(1) }
+            .returns(Optional.of(TodoItem(1, "old title")))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.title", equalTo("old title")))
+        // This is a bit weird. I think I'd rather have it return a 400.
+    }
+
+    @Test
+    fun whenPatchTitle_thenUpdatesItemsTitle() {
+        justRun { todoRepository.updateTitle(1, "new title") }
+        every { todoRepository.findById(1) }
+            .returns(Optional.of(TodoItem(1, "old title")))
+            .andThenAnswer { Optional.of(TodoItem(1, "new title")) }
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"title\": \"new title\"}")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.title", equalTo("new title")))
+        // Seems reasonable
     }
 
     private fun getTodoList() = mockMvc.perform(

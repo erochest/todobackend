@@ -2,6 +2,7 @@ package com.ericrochester.todobackend
 
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -36,10 +37,24 @@ class TodoRepositoryTests {
 
         val todoItemList = todoRepository.findAllByTitle("a title")
         todoItemList.size shouldBeEqualTo 1
-        todoItemList[0] shouldBeEqualTo TodoItem(1, "a title")
+        todoItemList[0].title shouldBeEqualTo "a title"
+        todoItemList[0].id shouldNotBeEqualTo -1
 
         val anotherList = todoRepository.findAllByTitle("another title")
         anotherList.size shouldBeEqualTo 1
-        anotherList[0] shouldBeEqualTo TodoItem(2, "another title")
+        anotherList[0].title shouldBeEqualTo "another title"
+        anotherList[0].id shouldNotBeEqualTo -1
+    }
+
+    @Test
+    fun whenUpdateTitle_thenItIsUpdated() {
+        todoRepository.save(TodoItem(-1, "a title"))
+        todoRepository.save(TodoItem(-1, "another title"))
+
+        todoRepository.updateTitle(1, "updated title")
+
+        val todoItemList = todoRepository.findAllByTitle("updated title")
+        todoItemList.size shouldBeEqualTo 1
+        todoItemList[0] shouldBeEqualTo TodoItem(1, "updated title")
     }
 }

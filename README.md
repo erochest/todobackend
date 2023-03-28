@@ -118,3 +118,23 @@ Back. And back to where we were several sessions ago, I think.
 I've already written the tests for the rest of this session, so I'll give us a moment
 to look over each, and then feed it to ChatGPT.
 
+Cool. Good enough for right now. Next time I'll have it write the tests as well.
+
+# Session 7
+
+Actually, today I'm not doing ChatGPT at all. I've gotten access to GitHub Copilot,
+so I'm going to run with that. So far it hasn't been that helpful for filling in
+this README, but I'm sure it'll get better.
+
+Sure it will.
+
+Let's see what we need to do next. Depending on what the tests for the project is,
+I may just do some refactoring on the models or add in use cases.
+
+Well, I need to stop for the moment. We'll pick this back up.
+
+Off-hand, I like the easier feedback loop, but I'm not sure yet how to communicate
+any small changes that I want to make.
+
+**Just need to handle PATCH with an empty body.**
+
