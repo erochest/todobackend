@@ -16,6 +16,10 @@ interface TodoRepository : JpaRepository<TodoItem, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update TodoItem set title = ?2 where id = ?1")
     abstract fun updateTitle(id: Long, title: String)
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update TodoItem set completed = ?2 where id = ?1")
+    abstract fun updateCompleted(id: Long, b: Boolean)
 }
 
 @Entity

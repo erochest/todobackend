@@ -5,6 +5,12 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true
 logging:
   level:
     web: DEBUG

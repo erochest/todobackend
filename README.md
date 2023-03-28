@@ -136,5 +136,11 @@ Well, I need to stop for the moment. We'll pick this back up.
 Off-hand, I like the easier feedback loop, but I'm not sure yet how to communicate
 any small changes that I want to make.
 
-**Just need to handle PATCH with an empty body.**
+# Session 8
+
+I tracked down the problem I was having: I just needed to add `@Transactional` to
+the controller method.
+
+Let's jump back into it. I suspect that driving this part out will motivate me to
+refactor the models.
 

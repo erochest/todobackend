@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.justRun
+import io.mockk.verify
 import org.hamcrest.Matchers.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -129,22 +129,6 @@ class TodobackendControllerTests {
     }
 
     @Test
-    fun whatPatchWithoutTitle_thenUpdatesNothing() {
-        justRun { todoRepository.updateTitle(1, "new title") }
-        every { todoRepository.findById(1) }
-            .returns(Optional.of(TodoItem(1, "old title")))
-
-        mockMvc.perform(
-            MockMvcRequestBuilders.patch("/api/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}")
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.title", equalTo("old title")))
-        // This is a bit weird. I think I'd rather have it return a 400.
-    }
-
-    @Test
     fun whenPatchTitle_thenUpdatesItemsTitle() {
         justRun { todoRepository.updateTitle(1, "new title") }
         every { todoRepository.findById(1) }
@@ -158,7 +142,29 @@ class TodobackendControllerTests {
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.title", equalTo("new title")))
-        // Seems reasonable
+
+        verify { todoRepository.updateTitle(1, "new title") }
+    }
+
+    @Test
+    fun whenPatchCompleted_thenUpdatesItemsCompleted() {
+        justRun { todoRepository.updateCompleted(1, true) }
+        every { todoRepository.findById(1) }
+            .returns(Optional.of(TodoItem(1, "old title")))
+            .andThenAnswer { Optional.of(TodoItem(1, "old title", true)) }
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"completed\": true}")
+        )
+            .andDo { result ->
+                println(result.response.contentAsString)
+            }
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.completed", equalTo(true)))
+
+        verify { todoRepository.updateCompleted(1, true) }
     }
 
     private fun getTodoList() = mockMvc.perform(

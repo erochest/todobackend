@@ -4,6 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import org.springframework.web.util.UriComponentsBuilder
@@ -46,11 +47,17 @@ class TodobackendController(private val todoRepository: TodoRepository) {
     }
 
     /// When PATCH is called, update the title
+    @Transactional
     @PatchMapping("/api/{id}")
-    fun patchApiById(@PathVariable id: Long, @RequestBody request: ItemRequest): ResponseEntity<ItemResponse> {
+    fun patchApiById(@PathVariable id: Long, @RequestBody request: UpdateItemRequest): ResponseEntity<ItemResponse> {
         val optionalItem = todoRepository.findById(id)
         if (optionalItem.isPresent) {
-            todoRepository.updateTitle(id, request.title)
+            if (request.title != null) {
+                todoRepository.updateTitle(id, request.title)
+            }
+            if (request.completed != null) {
+                todoRepository.updateCompleted(id, request.completed)
+            }
             val newItem = todoRepository.findById(id).get()
             return ResponseEntity.ok(newItem.toItemResponse())
         } else {
@@ -68,7 +75,10 @@ class TodobackendController(private val todoRepository: TodoRepository) {
 
     data class ItemRequest(val title: String)
 
+    data class UpdateItemRequest(val title: String?, val completed: Boolean?)
+
     data class ItemResponse(val title: String, val completed: Boolean, val url: String) {
+
         companion object {
             fun fromTodoItem(item: TodoItem, url: String): ItemResponse {
                 return ItemResponse(item.title, item.completed, url)
