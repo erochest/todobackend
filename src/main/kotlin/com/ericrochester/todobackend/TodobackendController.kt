@@ -65,14 +65,6 @@ class TodobackendController(private val todoRepository: TodoRepository) {
         }
     }
 
-    fun getUrl(id: Long): String {
-        return ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(id)
-            .toUri()
-            .toString()
-    }
-
     data class ItemRequest(val title: String)
 
     data class UpdateItemRequest(val title: String?, val completed: Boolean?)
@@ -87,6 +79,16 @@ class TodobackendController(private val todoRepository: TodoRepository) {
     }
 
     private fun TodoItem.toItemResponse(): ItemResponse {
-        return ItemResponse.fromTodoItem(this, getUrl(id))
+        return ItemResponse.fromTodoItem(this, Companion.getUrl(id))
+    }
+
+    companion object {
+        fun getUrl(id: Long): String {
+            return ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("/api/{id}")
+                .buildAndExpand(id)
+                .toUri()
+                .toString()
+        }
     }
 }

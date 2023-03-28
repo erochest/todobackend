@@ -4,17 +4,23 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.justRun
+import io.mockk.mockkStatic
 import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
+import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.*
 
 @WebMvcTest(controllers = arrayOf(TodobackendController::class))
@@ -165,6 +171,21 @@ class TodobackendControllerTests {
             .andExpect(jsonPath("$.completed", equalTo(true)))
 
         verify { todoRepository.updateCompleted(1, true) }
+    }
+
+    @Test
+    fun whenGetUrl_thenReturnsSimplePath() {
+        // I'm reaching too deeply in, but let's see what happens.
+        val httpServletRequest = MockHttpServletRequest().apply {
+            requestURI = "/api/1"
+            method = "GET"
+        }
+        mockkStatic(RequestContextHolder::class)
+        every { RequestContextHolder.getRequestAttributes() }
+            .returns(ServletRequestAttributes(httpServletRequest))
+
+        val url = TodobackendController.getUrl(1)
+        assertThat(url).isEqualTo("http://localhost/api/1")
     }
 
     private fun getTodoList() = mockMvc.perform(

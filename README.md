@@ -144,3 +144,5 @@ the controller method.
 Let's jump back into it. I suspect that driving this part out will motivate me to
 refactor the models.
 
+Cool. That seems like a good stopping place.
+
