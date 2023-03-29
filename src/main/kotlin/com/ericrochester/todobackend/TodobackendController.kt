@@ -65,6 +65,18 @@ class TodobackendController(private val todoRepository: TodoRepository) {
         }
     }
 
+    @Transactional
+    @DeleteMapping("/api/{id}")
+    fun deleteApiById(@PathVariable id: Long): ResponseEntity<Unit> {
+        val optionalItem = todoRepository.findById(id)
+        if (optionalItem.isPresent) {
+            todoRepository.deleteById(id)
+            return ResponseEntity.ok().build()
+        } else {
+            return ResponseEntity.notFound().build()
+        }
+    }
+
     data class ItemRequest(val title: String)
 
     data class UpdateItemRequest(val title: String?, val completed: Boolean?)

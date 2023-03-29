@@ -188,6 +188,21 @@ class TodobackendControllerTests {
         assertThat(url).isEqualTo("http://localhost/api/1")
     }
 
+    @Test
+    fun whenDeleteToTodoItemUrl_thenDeletesItem() {
+        justRun { todoRepository.deleteById(1) }
+        every { todoRepository.findById(1) }
+            .returns(Optional.of(TodoItem(1, "old title")))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.delete("/api/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+
+        verify { todoRepository.deleteById(1) }
+    }
+
     private fun getTodoList() = mockMvc.perform(
         MockMvcRequestBuilders.get("/api")
             .contentType(MediaType.APPLICATION_JSON)

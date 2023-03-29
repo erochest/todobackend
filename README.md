@@ -146,3 +146,6 @@ refactor the models.
 
 Cool. That seems like a good stopping place.
 
+# Session 9
+
+Starting to use Zoom to record so I can talk to myself. :) And not type.
