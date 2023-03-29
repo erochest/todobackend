@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 class TodobackendController(private val todoRepository: TodoRepository) {
@@ -81,26 +80,20 @@ class TodobackendController(private val todoRepository: TodoRepository) {
 
     data class UpdateItemRequest(val title: String?, val completed: Boolean?)
 
-    data class ItemResponse(val title: String, val completed: Boolean, val url: String) {
-
+    data class ItemResponse(val id: Long, val completed: Boolean, val title: String, val url: String) {
         companion object {
-            fun fromTodoItem(item: TodoItem, url: String): ItemResponse {
-                return ItemResponse(item.title, item.completed, url)
+            fun fromTodoItem(item: TodoItem): ItemResponse {
+                val url = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .replacePath("/api/{id}")
+                    .buildAndExpand(item.id)
+                    .toUri()
+                    .toString()
+                return ItemResponse(item.id, item.completed, item.title, url)
             }
         }
     }
 
     private fun TodoItem.toItemResponse(): ItemResponse {
-        return ItemResponse.fromTodoItem(this, Companion.getUrl(id))
-    }
-
-    companion object {
-        fun getUrl(id: Long): String {
-            return ServletUriComponentsBuilder.fromCurrentRequest()
-                .replacePath("/api/{id}")
-                .buildAndExpand(id)
-                .toUri()
-                .toString()
-        }
+        return ItemResponse.fromTodoItem(this)
     }
 }

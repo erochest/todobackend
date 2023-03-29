@@ -6,6 +6,7 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockkStatic
 import io.mockk.verify
+import org.amshove.kluent.shouldBeEqualTo
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
@@ -177,15 +178,16 @@ class TodobackendControllerTests {
     fun whenGetUrl_thenReturnsSimplePath() {
         // I'm reaching too deeply in, but let's see what happens.
         val httpServletRequest = MockHttpServletRequest().apply {
-            requestURI = "/api/1"
+            requestURI = "/api/3"
             method = "GET"
         }
         mockkStatic(RequestContextHolder::class)
         every { RequestContextHolder.getRequestAttributes() }
             .returns(ServletRequestAttributes(httpServletRequest))
 
-        val url = TodobackendController.getUrl(1)
-        assertThat(url).isEqualTo("http://localhost/api/1")
+        val todoItem = TodoItem(3, "title")
+        val itemResponse = TodobackendController.ItemResponse.fromTodoItem(todoItem)
+        itemResponse.url.shouldBeEqualTo("http://localhost/api/3")
     }
 
     @Test
