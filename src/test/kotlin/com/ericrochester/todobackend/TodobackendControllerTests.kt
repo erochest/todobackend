@@ -7,7 +7,6 @@ import io.mockk.justRun
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.amshove.kluent.shouldBeEqualTo
-import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.*
 
 @WebMvcTest(controllers = arrayOf(TodobackendController::class))
@@ -205,16 +203,48 @@ class TodobackendControllerTests {
         verify { todoRepository.deleteById(1) }
     }
 
+    @Test
+    fun whenPostWithOrder_thenResponseHasOrderField() {
+        every { todoRepository.save(TodoItem(title = "has order", sortOrder = 42)) }
+            .returns(TodoItem(1, "has order", sortOrder = 42))
+        every { todoRepository.findAll() }
+            .returns(listOf(TodoItem(1, "has order", sortOrder = 42)))
+
+        postTodo("has order", order = 42)
+
+        getTodoList()
+            .andExpect(jsonPath("$", hasSize<Any>(1)))
+            .andExpect(jsonPath("$[0].order", equalTo(42)))
+    }
+
+    @Test
+    fun whenPatchWithOrder_thenTodoItemOrderChanges() {
+        justRun { todoRepository.updateSortOrder(1, 42) }
+        every { todoRepository.findById(1) }
+            .returns(Optional.of(TodoItem(1, "old title", sortOrder = 99)))
+            .andThenAnswer { Optional.of(TodoItem(1, "old title", sortOrder = 42)) }
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"order\": 42}")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.order", equalTo(42)))
+
+        verify { todoRepository.updateSortOrder(1, 42) }
+    }
+
     private fun getTodoList() = mockMvc.perform(
         MockMvcRequestBuilders.get("/api")
             .contentType(MediaType.APPLICATION_JSON)
     )
 
-    private fun postTodo(title: String): ResultActions {
+    private fun postTodo(title: String, order: Long = -1): ResultActions {
         return mockMvc.perform(
             MockMvcRequestBuilders.post("/api")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"title\":  \"${title}\"}")
+                .content("{\"title\":  \"${title}\", \"order\": ${order}}")
         )
     }
 }

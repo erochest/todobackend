@@ -48,7 +48,7 @@ class TodoRepositoryTests {
 
     @Test
     fun whenUpdateTitle_thenItIsUpdated() {
-        todoRepository.save(TodoItem(-1, "a title"))
+        todoRepository.save(TodoItem(title = "title"))
         todoRepository.save(TodoItem(-1, "another title"))
 
         todoRepository.updateTitle(1, "updated title")
@@ -56,5 +56,19 @@ class TodoRepositoryTests {
         val todoItemList = todoRepository.findAllByTitle("updated title")
         todoItemList.size shouldBeEqualTo 1
         todoItemList[0] shouldBeEqualTo TodoItem(1, "updated title")
+    }
+
+    @Test
+    fun whenUpdateSortOrder_thenItIsUpdated() {
+        val item = todoRepository.save(TodoItem(title = "title"))
+        todoRepository.save(TodoItem(title = "another title"))
+
+        val todoItemList = todoRepository.findAllByTitle("title")
+        todoItemList[0].sortOrder shouldBeEqualTo -1
+
+        todoRepository.updateSortOrder(item.id, 42)
+
+        val updated = todoRepository.findAllByTitle("title")
+        updated[0].sortOrder shouldBeEqualTo 42
     }
 }

@@ -20,13 +20,18 @@ interface TodoRepository : JpaRepository<TodoItem, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update TodoItem set completed = ?2 where id = ?1")
     abstract fun updateCompleted(id: Long, b: Boolean)
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update TodoItem set sortOrder = ?2 where id = ?1")
+    abstract fun updateSortOrder(id: Long, sortOrder: Long)
 }
 
 @Entity
 data class TodoItem(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = 0,
-    var title: String = "",
-    val completed: Boolean = false
+    val title: String = "",
+    val completed: Boolean = false,
+    val sortOrder: Long = -1,
 ) {
-    constructor() : this(0, "", false) // required by JPA
+    constructor() : this(0, "", false, -1) // required by JPA
 }

@@ -26,3 +26,14 @@ databaseChangeLog:
                   name: completed
                   type: BOOLEAN
                   defaultValueBoolean: false
+  - changeSet:
+      id: add_order_column_to_todoitem
+      author: Eric Rochester
+      changes:
+        - addColumn:
+            tableName: todo_item
+            columns:
+              - column:
+                  name: sort_order
+                  type: INT
+                  defaultValueNumeric: 0

@@ -21,7 +21,7 @@ class TodobackendController(private val todoRepository: TodoRepository) {
 
     @PostMapping("/api")
     fun postApi(@RequestBody request: ItemRequest): ResponseEntity<ItemResponse> {
-        val todoItem = TodoItem(title = request.title)
+        val todoItem = TodoItem(title = request.title, sortOrder = request.order)
         val newItem = todoRepository.save(todoItem)
         val response = newItem.toItemResponse()
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
@@ -45,7 +45,6 @@ class TodobackendController(private val todoRepository: TodoRepository) {
         return ResponseEntity.ok().build()
     }
 
-    /// When PATCH is called, update the title
     @Transactional
     @PatchMapping("/api/{id}")
     fun patchApiById(@PathVariable id: Long, @RequestBody request: UpdateItemRequest): ResponseEntity<ItemResponse> {
@@ -56,6 +55,9 @@ class TodobackendController(private val todoRepository: TodoRepository) {
             }
             if (request.completed != null) {
                 todoRepository.updateCompleted(id, request.completed)
+            }
+            if (request.order != null) {
+                todoRepository.updateSortOrder(id, request.order)
             }
             val newItem = todoRepository.findById(id).get()
             return ResponseEntity.ok(newItem.toItemResponse())
@@ -76,11 +78,11 @@ class TodobackendController(private val todoRepository: TodoRepository) {
         }
     }
 
-    data class ItemRequest(val title: String)
+    data class ItemRequest(val title: String, val order: Long = -1)
 
-    data class UpdateItemRequest(val title: String?, val completed: Boolean?)
+    data class UpdateItemRequest(val title: String?, val completed: Boolean?, val order: Long?)
 
-    data class ItemResponse(val id: Long, val completed: Boolean, val title: String, val url: String) {
+    data class ItemResponse(val id: Long, val completed: Boolean, val title: String, val url: String, val order: Long = -1) {
         companion object {
             fun fromTodoItem(item: TodoItem): ItemResponse {
                 val url = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -88,7 +90,7 @@ class TodobackendController(private val todoRepository: TodoRepository) {
                     .buildAndExpand(item.id)
                     .toUri()
                     .toString()
-                return ItemResponse(item.id, item.completed, item.title, url)
+                return ItemResponse(item.id, item.completed, item.title, url, item.sortOrder)
             }
         }
     }
